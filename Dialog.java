@@ -50,12 +50,12 @@ public class Dialog {
 		ed_categore = inflate.findViewById(R.id.et_new_categore_cusd);
 		cancel = inflate.findViewById(R.id.cancel_custon_dialog);
 		accept = inflate.findViewById(R.id.ok_custon_dialog);
-		//TextView txtdialog = inflate.findViewById(R.id.tx_new_category);
+		TextView txtdialog = inflate.findViewById(R.id.tx_new_category);
 
 		ed_categore.setVisibility(View.GONE);
 		cancel.setVisibility(View.GONE);
 		accept.setVisibility(View.GONE);
-		//txtdialog.setVisibility(View.GONE);
+		txtdialog.setVisibility(View.GONE);
 		//Toast.makeText(context, "Aceito", Toast.LENGTH_SHORT).show();
 		//create.dismiss();
 
@@ -63,7 +63,7 @@ public class Dialog {
 		builder
 				//.setTitle("Selecione um opção.")
 				//.setIcon(R.drawable.ic_camera_24)
-				.setMessage("Escola um opição.").setPositiveButton("Galeria", new DialogInterface.OnClickListener() {
+				.setMessage("Escolha um opição.").setPositiveButton("Galeria", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
