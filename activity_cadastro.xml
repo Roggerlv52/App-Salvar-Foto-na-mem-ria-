@@ -1,0 +1,141 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="30dp" >
+
+        <ImageButton
+            android:id="@+id/main_back"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/ic_arrow_back_24" />
+
+        <com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/inputLayoutError"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox "
+            app:errorEnabled="true"
+		    app:hintEnabled="false"
+            app:counterEnabled="true">
+            <!-- style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" -->
+            <EditText
+                android:id="@+id/edt_cadastro_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint=""
+                android:textAlignment="center" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/edt_cadastro_valor"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edt_custom_bord"
+            android:hint="Preço:"
+            android:inputType="numberDecimal"
+            android:maxLength="5"
+            android:padding="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" >
+
+            <TextView
+                android:id="@+id/txt_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="5dp"
+                android:text="Quantidade" />
+
+            <EditText
+                android:id="@+id/edt_cadastro_q"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/txt_1"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edt_custom_bord"
+                android:hint="Qtd:"
+                android:inputType="number"
+                android:maxLength="3"
+                android:padding="5dp"
+                 />
+
+            <TextView
+                android:id="@+id/txt_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:padding="5dp"
+                android:text="Total"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/txt_cadastro_tot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/txt_2"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/edt_custom_bord"
+                android:padding="5dp"
+                android:text="€103.32"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Escaniar codigo de barras" />
+
+        <ImageButton
+            android:id="@+id/btn_scan"
+            android:layout_width="55dp"
+            android:layout_height="45dp"
+            android:src="@drawable/ic_barcode_24" />
+
+        <TextView
+            android:id="@+id/txt_cadastro_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Add foto do produto" />
+
+        <ImageView
+            android:id="@+id/img_cadastro"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:background="@drawable/edt_custom_bord"
+            android:padding="30dp"
+            android:src="@drawable/ic_no_image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Data:" />
+
+        <TextView
+            android:id="@+id/txt_data_cadastro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="09/11/2024" />
+    </LinearLayout>
+
+</ScrollView>
