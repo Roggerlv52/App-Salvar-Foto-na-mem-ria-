@@ -183,5 +183,29 @@ public class CadastroActivity extends BaseActivity {
 	private void startDialogOp(View v){
 		Dialog.dialogOpicion(CadastroActivity.this);
 	}
-
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+			if (data.getData() != null) {
+				Uri imageUri = data.getData();
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // API 28 ou superior
+					try {
+						ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), imageUri);
+						Bitmap bitmap = ImageDecoder.decodeBitmap(source);
+						imageView.setImageBitmap(bitmap);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else { // API 27 ou inferior (fallback para o método antigo)
+					try {
+						Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+						imageView.setImageBitmap(bitmap);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 }
