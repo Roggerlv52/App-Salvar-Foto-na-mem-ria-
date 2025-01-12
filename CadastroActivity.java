@@ -22,7 +22,7 @@ import java.util.Date;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
-public class CadastroActivity extends BaseActivity {
+public class CadastroActivity extends BaseActivity implements Controlador{
 	private static final int REQUEST_CAMERA_PERMISSION = 100;
 	private static final int REQUEST_IMAGE_CAPTURE = 1;
 	private ImageButton btnBarcode, tobackMain;
@@ -108,6 +108,8 @@ public class CadastroActivity extends BaseActivity {
 				}
 			}
 		});
+		startPermission(this);
+		new Dialog(this);
 		this.tobackMain.setOnClickListener(this::setClickSaveData);
 		this.imageView.setOnClickListener(this::startDialogOp);
 	}
@@ -207,5 +209,9 @@ public class CadastroActivity extends BaseActivity {
 				}
 			}
 		}
+	}
+	@Override
+	public void StarCamera() {
+		startPermissionCamera();		
 	}
 }
