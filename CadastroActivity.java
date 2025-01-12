@@ -32,7 +32,7 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 	private TextView txt2, txt3, txtTotValor;
 	private int txtvisible;
 	private Uri photoUri;
-	float soma, valor;
+	private float soma, valor;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -42,7 +42,6 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setTitle((CharSequence) "Cadastrar novo item");
 		}
-
 		this.edtName = findViewById(R.id.edt_cadastro_name);
 		this.edtQuant = findViewById(R.id.edt_cadastro_q);
 		this.txt2 = findViewById(R.id.txt_2);
@@ -113,7 +112,6 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 		this.tobackMain.setOnClickListener(this::setClickSaveData);
 		this.imageView.setOnClickListener(this::startDialogOp);
 	}
-
 	private void setClickSaveData(View view) {
 		String obj = this.edtName.getText().toString();
 		try {
@@ -123,9 +121,8 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 			finish();
 		}
 	}
-
 	private void SalvarData(String str, float f, String str2, int i) {
-		long additem = OpenHelper.getInstance(this).additem(str, f, str2, i, this.photoUri.toString());
+		long additem = OpenHelper.getInstance(this).additem(str, f, str2, i, currentPhotoPath);
 		if (additem > 0) {
 			Toast.makeText(this, "Salvo com sucesso!" + additem, 0).show();
 		} else {
@@ -134,7 +131,6 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 		startActivity(new Intent(this, ActivityPrincipal.class));
 		finish();
 	}
-
 	private void startPermissionCamera(View view) {
 		if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA") == 0
 				&& ContextCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE") == 0) {
@@ -144,36 +140,41 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 					new String[] { "android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE" }, 100);
 		}
 	}
-
 	private void startCameraScan(View view) {
 		startActivity(new Intent(this, CameraScanActivity.class));
 	}
-
 	private void openCamera() {
-		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-		if (intent.resolveActivity(getPackageManager()) != null) {
-			File file = null;
+		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+			// Exclui o arquivo antigo, se existir
+			if (photoFile != null && photoFile.exists()) {
+				photoFile.delete();
+			}
 			try {
-				file = createImageFile();
+				photoFile = createImageFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if (file != null) {
-				Uri uriForFile = FileProvider.getUriForFile(this,
-						getApplicationContext().getPackageName() + ".fileprovider", file);
-				this.photoUri = uriForFile;
-				intent.putExtra("output", uriForFile);
-				startActivityForResult(intent, 1);
+			if (photoFile != null) {
+				photoUri = FileProvider.getUriForFile(CadastroActivity.this,
+						getApplicationContext().getPackageName() + ".fileprovider", photoFile);
+				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+				startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 			}
 		}
 	}
 
 	private File createImageFile() throws IOException {
-		String format = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		File createTempFile = File.createTempFile("JPEG_" + format + "_", ".jpg",
-				getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-		this.currentPhotoPath = createTempFile.getAbsolutePath();
-		return createTempFile;
+		// Cria o nome do arquivo da imagem
+		String timeStamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
+		String imageFileName = "JPEG_" + timeStamp + "_";
+		File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		File image = File.createTempFile(imageFileName, // prefixo
+				".jpg", // sufixo
+				storageDir);
+		// Guarda o caminho do arquivo para usá-lo depois
+		currentPhotoPath = image.getAbsolutePath();
+		return image; // diretório
 	}
 
 	public void onRequestPermissionsResult(int i, String[] strArr, int[] iArr) {
@@ -188,8 +189,8 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-			if (data.getData() != null) {
+		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {			
+			if (data != null) {
 				Uri imageUri = data.getData();
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // API 28 ou superior
 					try {
@@ -207,7 +208,10 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 						e.printStackTrace();
 					}
 				}
+			}else{				
+				imageView.setImageURI(photoUri);
 			}
+			
 		}
 	}
 	@Override
