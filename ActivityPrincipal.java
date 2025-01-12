@@ -99,23 +99,19 @@ public class ActivityPrincipal extends BaseActivity {
 		bottonNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
 			@Override
 			public boolean onNavigationItemSelected(MenuItem menuItem) {
-				int itemId = menuItem.getItemId();
-				if (itemId == R.id._navigation_menu) {
-					//usar drawerLayput para abrir a gaveta
+				switch (menuItem.getItemId()) {
+				case R.id._navigation_menu:
 					drawer.openDrawer(GravityCompat.START);
-					return true;
-				}
-				if (itemId == R.id._menu_bottom_sheet) {
-					updateBottomSheet();
-					return true;
-				} else {
-					/*
-					Intent intent = new Intent(MainActivity.this, CadastroActivity.class);
-					intent.addFlags(131072);
-					MainActivity.this.startActivity(intent);
-					*/
-					return true;
-				}
+					return true;			
+				case R.id._menu_bottom_sheet:
+				    updateBottomSheet();
+					return true;				
+				case R.id.add_bottom_sheet:
+					startCadastro();
+					return true;			
+				default:
+				return true;			
+				}				
 			}
 		});
 		bottomSheet = BottomSheetBehavior.from(bottomSheetView);
