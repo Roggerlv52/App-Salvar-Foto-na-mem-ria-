@@ -57,60 +57,22 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 			barcodeCameraScan = getIntentCameraScan.getStringExtra("cameraScanActivity");
 			txt3.setText(barcodeCameraScan);
 		}
-		this.edtValor.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				String obj = CadastroActivity.this.edtValor.getText().toString();
-				if (obj.isEmpty()) {
-					CadastroActivity.this.valor = 0.0f;
-					return;
-				}
-				CadastroActivity.this.valor = Float.parseFloat(obj);
-			}
-		});
-		this.edtQuant.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				int i = 0;
-				CadastroActivity.this.txt2.setVisibility(0);
-				CadastroActivity.this.txtTotValor.setVisibility(0);
-				String obj = CadastroActivity.this.edtQuant.getText().toString();
-				if (!obj.isEmpty()) {
-					CadastroActivity.this.soma = 0.0f;
-					i = Integer.parseInt(obj);
-					for (int i2 = 1; i2 <= i; i2++) {
-						CadastroActivity.this.soma += CadastroActivity.this.valor;
-					}
-					DecimalFormat decimalFormat = new DecimalFormat("#.00");
-					CadastroActivity.this.txtTotValor
-							.setText("€" + decimalFormat.format((double) CadastroActivity.this.soma));
-				}
-				if (i < 2) {
-					CadastroActivity.this.txt2.setVisibility(4);
-					CadastroActivity.this.txtTotValor.setVisibility(4);
-				}
-			}
-		});
+		 SetDataC set = new SetDataC(this,input);
+		set.setEdtPrice(edtValor);
+		valor = set.getTotPrice();
+		String name = set.getName();
+	    
 		startPermission(this);
 		new Dialog(this);
-		this.tobackMain.setOnClickListener(this::setClickSaveData);
-		this.imageView.setOnClickListener(this::startDialogOp);
+		tobackMain.setOnClickListener(v ->{
+			if(name.length() <4){
+				input.setError("Nome deve ser maior que 3!");				
+			}else {
+				input.setHelperTextEnabled(false);
+			}
+		});
+		imageView.setOnClickListener(this::startDialogOp);
+			
 	}
 	private void setClickSaveData(View view) {
 		String obj = this.edtName.getText().toString();
