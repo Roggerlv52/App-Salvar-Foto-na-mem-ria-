@@ -17,7 +17,6 @@ public class SetDataC {
 	public SetDataC() {
 
 	}
-
 	public void setEdtName(EditText edt) {
 		this.name = edt.getText().toString();
 	}
@@ -26,7 +25,6 @@ public class SetDataC {
 
 		this.amount = Integer.parseInt(edt.getText().toString());
 	}
-
 	public void setEdtPrice(EditText edt) {
 		edt.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -47,14 +45,11 @@ public class SetDataC {
 				price = Float.parseFloat(obj);
 			}
 
-		});
-		//this.price = Float.parseFloat(edt.getText().toString());
+		})
 	}
-
 	public int getAmount() {
 		return this.amount;
 	}
-
 	public String getName() {
 		return this.name;
 	}
@@ -66,5 +61,4 @@ public class SetDataC {
 	public String getBarcode() {
 		return this.barcode;
 	}
-
 }
