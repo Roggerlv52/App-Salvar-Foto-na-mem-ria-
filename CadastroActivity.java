@@ -32,7 +32,6 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 	private TextView txt2, txt3, txtTotValor;
 	private int txtvisible;
 	private Uri photoUri;
-	private float soma, valor;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -42,22 +41,22 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setTitle((CharSequence) "Cadastrar novo item");
 		}
-		this.edtName = findViewById(R.id.edt_cadastro_name);
-		this.edtQuant = findViewById(R.id.edt_cadastro_q);
-		this.txt2 = findViewById(R.id.txt_2);
-		this.txt3 = findViewById(R.id.txt_cadastro_3);
-		this.txtTotValor = findViewById(R.id.txt_cadastro_tot);
-		this.edtValor = findViewById(R.id.edt_cadastro_valor);
-		this.tobackMain = findViewById(R.id.main_back);
-		this.btnBarcode = findViewById(R.id.btn_scan);
-		this.imageView = findViewById(R.id.img_cadastro);
+		edtName = findViewById(R.id.edt_cadastro_name);
+		edtQuant = findViewById(R.id.edt_cadastro_q);
+		txt2 = findViewById(R.id.txt_2);
+		txt3 = findViewById(R.id.txt_cadastro_3);
+		txtTotValor = findViewById(R.id.txt_cadastro_tot);
+		edtValor = findViewById(R.id.edt_cadastro_valor);
+		tobackMain = findViewById(R.id.main_back);
+		btnBarcode = findViewById(R.id.btn_scan);
+		imageView = findViewById(R.id.img_cadastro);
 
 		Intent getIntentCameraScan = getIntent();
 		if (getIntentCameraScan != null) {
 			barcodeCameraScan = getIntentCameraScan.getStringExtra("cameraScanActivity");
 			txt3.setText(barcodeCameraScan);
 		}
-		 SetDataC set = new SetDataC(this,input);
+		SetDataC set = new SetDataC(this,input);
 		set.setEdtPrice(edtValor);
 		valor = set.getTotPrice();
 		String name = set.getName();
@@ -69,26 +68,23 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 				input.setError("Nome deve ser maior que 3!");				
 			}else {
 				input.setHelperTextEnabled(false);
+				saveData(name,set.getTotPrice(),set.getAmount());
 			}
 		});
-		imageView.setOnClickListener(this::startDialogOp);
-			
+		imageView.setOnClickListener(this::startDialogOp);			
 	}
-	private void setClickSaveData(View view) {
-		String obj = this.edtName.getText().toString();
+        private void saveData(String name, float price, int amount) {
+		long additem = 0;
 		try {
-			SalvarData(obj, this.soma, barcodeCameraScan, Integer.parseInt(this.edtQuant.getText().toString()));
+			additem = OpenHelper.getInstance(this).additem(name, price, barcodeCameraScan, amount, currentPhotoPath);
+			if (additem > 0) {
+				Toast.makeText(this, "Salvo com sucesso!", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(this, "Banco de dados nao esta gravando!", Toast.LENGTH_SHORT).show();
+			}
 		} catch (Exception unused) {
-			Toast.makeText(this, "nenhum dado salvo", 0).show();
+			Toast.makeText(this, "nenhum dado salvo", Toast.LENGTH_SHORT).show();
 			finish();
-		}
-	}
-	private void SalvarData(String str, float f, String str2, int i) {
-		long additem = OpenHelper.getInstance(this).additem(str, f, str2, i, currentPhotoPath);
-		if (additem > 0) {
-			Toast.makeText(this, "Salvo com sucesso!" + additem, 0).show();
-		} else {
-			Toast.makeText(this, "Banco de dados nao esta gravando!", 0).show();
 		}
 		startActivity(new Intent(this, ActivityPrincipal.class));
 		finish();
