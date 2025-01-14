@@ -5,8 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public class SetDataC {
-	
+public class SetDataC {	
 	private EditText edtName, edtQuant, edtPrice;
 	private Context context;
 	private String name = "";
@@ -22,12 +21,10 @@ public class SetDataC {
 	}
 
 	public void setEdtAmount(EditText edt) {
-
 		edt.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
-
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 			}
@@ -53,7 +50,6 @@ public class SetDataC {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
-
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 			}
