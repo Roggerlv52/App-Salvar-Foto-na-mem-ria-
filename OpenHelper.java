@@ -164,18 +164,19 @@ public class OpenHelper extends SQLiteOpenHelper {
 	}
 
 	// ADICIONANDO DADOS.......
-	public long additem(String name, float valor, String barcode, int quantidade, String uri) {
+	public long additem(String name, float valor, String barcode, int amount, String uri) {
 		LocalDate localDate = LocalDate.now();
 		SQLiteDatabase dd = getWritableDatabase();
 		long calcId = 0;
 		try {
 			dd.beginTransaction();
 			ContentValues values = new ContentValues();
+			if(amount ==0) amount = 1;
 			values.put(COLUMN_ITEM, name);
 			values.put(COLUMN_VALOR, valor);
 			values.put(COLUMN_BARCOD, barcode);
-			values.put(COLUMN_IMAGE, uri);
-			values.put(COLUMN_QUANT,quantidade);
+			values.put(COLUMN_IMAGE, uri);		
+			values.put(COLUMN_QUANT,amount);
 			values.put(COLUMN_DTCOMPRA, localDate.toString());
 			calcId = dd.insertOrThrow(TB_NAME, null, values);
 
