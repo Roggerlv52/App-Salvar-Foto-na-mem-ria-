@@ -5,12 +5,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public class SetDataC {	
-	private EditText edtName, edtQuant, edtPrice;
+public class SetDataC {		
 	private Context context;
 	private String name = "";
 	private int amount;
 	private float price;
+	private float soma;
 	private String barcode = "";
 	
 	public SetDataC() {
@@ -21,55 +21,29 @@ public class SetDataC {
 	}
 
 	public void setEdtAmount(EditText edt) {
-		edt.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				String obj = edt.getText().toString();
-				int i = 0;
-				if (!obj.isEmpty()) {
-
-					i = Integer.parseInt(obj);
-					for (int i2 = 1; i2 <= i; i2++) {
-						soma += price;
-					}
-					DecimalFormat decimalFormat = new DecimalFormat("#.00");
-					totPrice = Float.parseFloat(decimalFormat.format(soma));
-				}
-			}
-		});
+		int q = 0;
+		try {
+			q = Integer.parseInt(edt.getText().toString());
+		} catch (Exception e) {
+			Toast.makeText(context, "Quantidade invalida! -> " + edt.getText(), Toast.LENGTH_SHORT).show();
+		}
+		this.amount = q;
 	}
 	public void setEdtPrice(EditText edt) {
-		edt.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		float f = 0;
+		try {
+			if(amount == 0){
+				f += Float.parseFloat(edt.getText().toString());
 			}
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			for (int i = 1; i <= amount; i++) {
+				f += Float.parseFloat(edt.getText().toString());
 			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				String obj = edt.getText().toString();
-				try {
-
-					if (obj.isEmpty() && obj != null) {
-						price = 0.0f;
-					} else {
-						price = Float.parseFloat(obj);
-					}
-				} catch (Exception e) {
-					Toast.makeText(context, "Valor invalido! (" + obj + ")", Toast.LENGTH_SHORT).show();
-				}
-			}
-
-		})
+			
+		} catch (Exception e) {
+			//Toast.makeText(context, "Preço invalida! -> " + edt.getText(), Toast.LENGTH_SHORT).show();
+			this.price = 0;
+		}
+		this.price = f;
 	}
 	public int getAmount() {
 		return this.amount;
