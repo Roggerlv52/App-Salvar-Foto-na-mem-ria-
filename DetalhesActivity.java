@@ -115,18 +115,15 @@ public class DetalhesActivity extends AppCompatActivity {
 	}
 
 	private void closeActivity(int id, String dados) {
-///storage/emulated/0/Android/data/com.rogger.test/files/Pictures/JPEG_20241201_4591455540185839220.jpg
+		long idD;
 		File file = new File(dados);
-		//	String absolutePath = file.getAbsolutePath();
-		//	File fileimg = getExternalFilesDir(absolutePath);
-
 		// Verifica se o arquivo existe antes de tentar deletá-lo
 		if (file.exists()) {
 			boolean deleted = file.delete();
 			if (deleted) {
 				//Log.d("ImageDeletion", "Imagem deletada com sucesso: " + imagePath);
 				Toast.makeText(this, "Img Excluindo com sucesso! ", Toast.LENGTH_SHORT).show();
-				long idD = OpenHelper.getInstance(this).removeItem(id);
+				idD = OpenHelper.getInstance(this).removeItem(id);
 				if (idD > 0) {
 
 					Intent i = new Intent(DetalhesActivity.this, ActivityPrincipal.class);
@@ -138,8 +135,14 @@ public class DetalhesActivity extends AppCompatActivity {
 				Toast.makeText(this, "Falha ao deletar a imagem! ", Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			// Log.e("ImageDeletion", "Arquivo não encontrado: " + imagePath);
-			Toast.makeText(this, "" + file, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Excluindo com sucesso! ", Toast.LENGTH_LONG).show();
+			idD = OpenHelper.getInstance(this).removeItem(id);
+			if (idD > 0) {
+
+				Intent i = new Intent(DetalhesActivity.this, ActivityPrincipal.class);
+				startActivity(i);
+				finish();
+			}
 		}
 
 	}
