@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.BitmapCompat;
+import com.google.android.material.textfield.TextInputLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -25,6 +27,7 @@ import java.text.SimpleDateFormat;
 public class CadastroActivity extends BaseActivity implements Controlador{
 	private static final int REQUEST_CAMERA_PERMISSION = 100;
 	private static final int REQUEST_IMAGE_CAPTURE = 1;
+	private TextInputLayout input;
 	private ImageButton btnBarcode, tobackMain;
 	private ImageView imageView;
 	private String currentPhotoPath, photo, barcodeCameraScan;
@@ -44,6 +47,7 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 		edtName = findViewById(R.id.edt_cadastro_name);
 		edtQuant = findViewById(R.id.edt_cadastro_q);
 		txt2 = findViewById(R.id.txt_2);
+		input = findViewById(R.id.inputLayoutError);
 		txt3 = findViewById(R.id.txt_cadastro_3);
 		txtTotValor = findViewById(R.id.txt_cadastro_tot);
 		edtValor = findViewById(R.id.edt_cadastro_valor);
@@ -56,39 +60,37 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 			barcodeCameraScan = getIntentCameraScan.getStringExtra("cameraScanActivity");
 			txt3.setText(barcodeCameraScan);
 		}
-		SetDataC set = new SetDataC(this,input);
-		set.setEdtPrice(edtValor);
-		valor = set.getTotPrice();
-		String name = set.getName();
-	    
+		SetDataC set = new SetDataC(this);   
 		startPermission(this);
 		new Dialog(this);
 		tobackMain.setOnClickListener(v ->{
-			if(name.length() <4){
-				input.setError("Nome deve ser maior que 3!");				
-			}else {
-				input.setHelperTextEnabled(false);
-				saveData(name,set.getTotPrice(),set.getAmount());
+			tobackMain.setOnClickListener(v -> {
+			set.setEdtName(edtName);
+			set.setEdtAmount(edtQuant);
+			set.setEdtPrice(edtValor);
+
+			if (validate(set.getName(), set.getTotPrice(), set.getAmount())) {
+				long additem = 0;
+				try {
+					additem = OpenHelper.getInstance(this).additem(set.getName(), set.getTotPrice(), barcodeCameraScan, set.getAmount(),
+							currentPhotoPath);
+					if (additem > 0) {
+						Toast.makeText(this, "Salvo com sucesso!", Toast.LENGTH_SHORT).show();
+					} else {
+						Toast.makeText(this, "Banco de dados nao esta gravando!", Toast.LENGTH_SHORT).show();
+					}
+				} catch (Exception unused) {
+					Toast.makeText(this, "nenhum dado salvo", Toast.LENGTH_SHORT).show();
+					finish();
+				}
+				startActivity(new Intent(this, ActivityPrincipal.class));
+				finish();
 			}
+			
 		});
 		imageView.setOnClickListener(this::startDialogOp);			
 	}
-        private void saveData(String name, float price, int amount) {
-		long additem = 0;
-		try {
-			additem = OpenHelper.getInstance(this).additem(name, price, barcodeCameraScan, amount, currentPhotoPath);
-			if (additem > 0) {
-				Toast.makeText(this, "Salvo com sucesso!", Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(this, "Banco de dados nao esta gravando!", Toast.LENGTH_SHORT).show();
-			}
-		} catch (Exception unused) {
-			Toast.makeText(this, "nenhum dado salvo", Toast.LENGTH_SHORT).show();
-			finish();
-		}
-		startActivity(new Intent(this, ActivityPrincipal.class));
-		finish();
-	}
+        
 	private void startPermissionCamera(View view) {
 		if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA") == 0
 				&& ContextCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE") == 0) {
@@ -171,6 +173,18 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 			}
 			
 		}
+	}
+	private boolean validate(String name, float v, int q) {
+		if (name == null || name.isEmpty()) {
+			input.setError("Caractere nome precisa ser preenchido!");
+			return false;
+		}
+		if (v == 0.00f && q == 0) {
+			Toast.makeText(this, "Erro: valor nao pode ser Zero! " + v, Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		input.setError(null);
+		return true;
 	}
 	@Override
 	public void StarCamera() {
