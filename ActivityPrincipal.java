@@ -28,10 +28,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ActivityPrincipal extends BaseActivity {
-	private int ano = 0;
 	private int cont = 0;
-	private int day;
-	private int quant;
+	private float totPrice;
 	private TextView txt1bs, tx2tbs;
 	private Controlador controlador;
 	private boolean click = false;
@@ -124,8 +122,16 @@ public class ActivityPrincipal extends BaseActivity {
 					break;
 				case BottomSheetBehavior.STATE_EXPANDED:
 					imgUp.animate().setDuration(300).rotationBy(180f);
-					txt1bs.setText("Total gasto nesse mes é :" + String.format("%.2f", 5.899) + "€");
-					tx2tbs.setText("Total de items comprado nesse mês é :" + 12.45);
+						int tot = 0;
+					totPrice = 0;
+					for (Registro item : dados) {
+						cont++;
+						item.setId(item.id);
+						totPrice += item.preco;
+						tot += item.quantidade;
+					}
+					txt1bs.setText("Total gasto nesse mes é :" + String.format("%.2f", totPrice) + "€");
+					tx2tbs.setText("Total de items comprado nesse mês é :" + tot);
 					break;
 				case BottomSheetBehavior.STATE_HIDDEN:
 				case BottomSheetBehavior.STATE_DRAGGING:
