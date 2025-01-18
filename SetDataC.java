@@ -1,12 +1,11 @@
 package com.rogger.test;
 
-import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
 public class SetDataC {		
-	private Context context;
+	
 	private String name = "";
 	private int amount;
 	private float price;
@@ -25,7 +24,7 @@ public class SetDataC {
 		try {
 			q = Integer.parseInt(edt.getText().toString());
 		} catch (Exception e) {
-			Toast.makeText(context, "Quantidade invalida! -> " + edt.getText(), Toast.LENGTH_SHORT).show();
+			q = 0;
 		}
 		this.amount = q;
 	}
