@@ -19,7 +19,7 @@
                 android:id="@+id/tabLayout_TabsScrolledActivity"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/bannerBeep"
+                android:background="?attr/colorPrimary"
                 app:tabIconTint="@color/white"
                 app:tabIndicatorColor="@color/white"
                 app:tabMode="scrollable"
