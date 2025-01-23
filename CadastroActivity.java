@@ -136,7 +136,20 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 		currentPhotoPath = image.getAbsolutePath();
 		return image; // diretório
 	}
+//Funcão para reduzir o bitmap
+	private Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
 
+		float scaleWidth = ((float) maxWidth) / width;
+		float scaleHeight = ((float) maxHeight) / height;
+		float scaleFactor = Math.min(scaleWidth, scaleHeight);
+
+		int newWidth = Math.round(width * scaleFactor);
+		int newHeight = Math.round(height * scaleFactor);
+
+		return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+	}
 	public void onRequestPermissionsResult(int i, String[] strArr, int[] iArr) {
 		super.onRequestPermissionsResult(i, strArr, iArr);
 		if (i == 100 && iArr.length > 0 && iArr[0] == 0) {
@@ -150,28 +163,40 @@ public class CadastroActivity extends BaseActivity implements Controlador{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {			
-			if (data != null) {
-				Uri imageUri = data.getData();
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // API 28 ou superior
-					try {
-						ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), imageUri);
-						Bitmap bitmap = ImageDecoder.decodeBitmap(source);
-						imageView.setImageBitmap(bitmap);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				} else { // API 27 ou inferior (fallback para o método antigo)
-					try {
-						Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-						imageView.setImageBitmap(bitmap);
-					} catch (IOException e) {
-						e.printStackTrace();
+		   try {
+				Bitmap originalBitmap;
+
+				if (data != null) {
+					// Seleção da galeria
+					InputStream inputStream = getContentResolver().openInputStream(data.getData());
+					originalBitmap = BitmapFactory.decodeStream(inputStream);
+					inputStream.close();
+				} else {
+					// Foto capturada
+					originalBitmap = BitmapFactory.decodeFile(currentPhotoPath);
+				}
+				// Redimensiona a imagem para baixa resolução
+				Bitmap resizedBitmap = resizeBitmap(originalBitmap, 1024, 1024); // Ajuste os valores conforme necessário
+
+				// Salva a imagem redimensionada em um novo arquivo
+				File resizedImageFile = createImageFile();
+				FileOutputStream outputStream = new FileOutputStream(resizedImageFile);
+				resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream); // Ajuste a qualidade, se necessário
+				outputStream.close();
+
+				currentPhotoPath = resizedImageFile.getAbsolutePath();
+				// Exclui a imagem original de alta resolução
+				if (data == null) { // Imagem capturada (não vinda da galeria)
+					File originalFile = new File(currentPhotoPath);
+					if (originalFile.exists()) {
+						photoFile.delete();
 					}
 				}
-			}else{				
-				imageView.setImageURI(photoUri);
-			}
-			
+				// Carrega a imagem no ImageView
+				Picasso.get().load(resizedImageFile).into(imageView);
+			} catch (IOException e) {
+				e.printStackTrace();
+		   }	
 		}
 	}
 	private boolean validate(String name, float v, int q) {
